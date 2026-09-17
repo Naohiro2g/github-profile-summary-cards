@@ -51,7 +51,12 @@ jobs:
           # Recreate `release` from current main, carrying the freshly built dist/
           git checkout -B release
           git add dist
-          git commit -m "release: ${TAG_NAME}" || echo "No dist changes to commit"
+          # git commit -m "release: ${TAG_NAME}" || echo "No dist changes to commit"
+          if git diff --cached --quiet; then
+            echo "No dist changes to commit"
+          else
+            git commit -m "deploy: ${GITHUB_SHA}"
+          fi
           # Pushing to `release` triggers the Vercel production deployment
           git push -f origin release
 
